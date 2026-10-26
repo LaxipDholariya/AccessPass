@@ -7,11 +7,19 @@
 // Retrieve and sanitize API base URL from Vite environment variables
 const rawApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-// In production, require VITE_API_BASE_URL or fallback to relative '/api' if hosted together.
-// Never fall back to localhost in production.
-export const API_BASE_URL = rawApiUrl
-  ? rawApiUrl.trim().replace(/\/+$/, '')
-  : (import.meta.env.DEV ? 'http://localhost:5000/api' : '');
+function sanitizeApiBaseUrl(url) {
+  if (!url) {
+    return import.meta.env.DEV ? 'http://localhost:5000/api' : '';
+  }
+  let cleaned = url.trim().replace(/\/+$/, '');
+  // Automatically ensure /api suffix is present to prevent route mismatches
+  if (!cleaned.endsWith('/api')) {
+    cleaned += '/api';
+  }
+  return cleaned;
+}
+
+export const API_BASE_URL = sanitizeApiBaseUrl(rawApiUrl);
 
 if (import.meta.env.PROD && !rawApiUrl) {
   console.warn(

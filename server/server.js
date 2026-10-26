@@ -33,6 +33,15 @@ const allowedOrigins = rawOrigins
   .map((origin) => origin.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 
+// Always trusted production & development origins
+const trustedOrigins = [
+  'https://access-pass-five.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
+];
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -41,20 +50,23 @@ app.use(
 
       const cleanOrigin = origin.replace(/\/+$/, '');
 
-      // Allow wildcard or explicit match with configured Vercel origin
+      // 1. Allow wildcard or explicit match with configured origins
       if (allowedOrigins.includes('*') || allowedOrigins.includes(cleanOrigin)) {
         return callback(null, true);
       }
 
-      // Allow localhost ports in non-production environments
-      if (process.env.NODE_ENV !== 'production') {
-        if (cleanOrigin.startsWith('http://localhost:') || cleanOrigin.startsWith('http://127.0.0.1:')) {
-          return callback(null, true);
-        }
+      // 2. Allow known trusted origins (production domain and standard local ports)
+      if (trustedOrigins.includes(cleanOrigin)) {
+        return callback(null, true);
       }
 
-      // Allow all Vercel preview deployment URLs if explicitly enabled
-      if (process.env.ALLOW_VERCEL_PREVIEWS === 'true' && cleanOrigin.endsWith('.vercel.app')) {
+      // 3. Allow all Vercel domains (*.vercel.app) for preview and production deployments
+      if (cleanOrigin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+
+      // 4. Allow any localhost / 127.0.0.1 port for local development
+      if (cleanOrigin.startsWith('http://localhost:') || cleanOrigin.startsWith('http://127.0.0.1:')) {
         return callback(null, true);
       }
 
@@ -95,15 +107,15 @@ app.get(['/health', '/api/health'], async (req, res) => {
   });
 });
 
-// Mount application API modules
-app.use('/api/auth', authRoutes);
-app.use('/api/public', publicRoutes);
-app.use('/api/host', hostRoutes);
-app.use('/api/security', securityRoutes);
-app.use('/api/admin', adminRoutes);
+// Mount application API modules (supporting both /api/path and /path aliases for maximum resilience)
+app.use(['/api/auth', '/auth'], authRoutes);
+app.use(['/api/public', '/public'], publicRoutes);
+app.use(['/api/host', '/host'], hostRoutes);
+app.use(['/api/security', '/security'], securityRoutes);
+app.use(['/api/admin', '/admin'], adminRoutes);
 
 // Catch-all 404 handler for undefined API routes
-app.use('/api/*', (req, res) => {
+app.use(['/api/*', '/auth/*', '/public/*', '/host/*', '/security/*', '/admin/*'], (req, res) => {
   res.status(404).json({
     success: false,
     message: `API endpoint '${req.originalUrl}' does not exist on this server.`,
@@ -112,7 +124,14 @@ app.use('/api/*', (req, res) => {
 
 // Single Page Application (SPA) HTML fallback for client-side routing on page refresh
 app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api')) {
+  if (
+    req.path.startsWith('/api') ||
+    req.path.startsWith('/auth') ||
+    req.path.startsWith('/public') ||
+    req.path.startsWith('/host') ||
+    req.path.startsWith('/security') ||
+    req.path.startsWith('/admin')
+  ) {
     return next();
   }
   if (fs.existsSync(clientDistPath)) {

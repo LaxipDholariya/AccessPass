@@ -1,8 +1,13 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Build database connection pool configuration supporting both:
@@ -89,18 +94,61 @@ const poolConfig = buildDbConfig();
 const pool = mysql.createPool(poolConfig);
 
 /**
+ * Automatically initializes database schema and seeds if the target database is empty.
+ * Essential for cloud deployments (e.g. Aiven) when newly provisioned.
+ */
+export async function autoInitSchemaIfEmpty(connection) {
+  try {
+    const [tables] = await connection.query("SHOW TABLES LIKE 'buildings'");
+    if (tables && tables.length > 0) {
+      // Check if buildings table has records
+      const [countRows] = await connection.query("SELECT COUNT(*) as count FROM buildings");
+      if (countRows && countRows[0] && countRows[0].count > 0) {
+        return; // Schema and baseline seed already exist
+      }
+    }
+
+    console.log('📦 Database tables/data missing. Auto-initializing schema from init_aiven.sql...');
+    const sqlPath = path.resolve(__dirname, '../database/init_aiven.sql');
+
+    if (!fs.existsSync(sqlPath)) {
+      console.warn(`⚠️  Cannot auto-initialize schema: ${sqlPath} not found.`);
+      return;
+    }
+
+    const content = fs.readFileSync(sqlPath, 'utf-8');
+    const statements = content
+      .replace(/\/\*[\s\S]*?\*\/|--.*$/gm, '')
+      .split(';')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    for (const statement of statements) {
+      await connection.query(statement);
+    }
+    console.log('✅ Database schema auto-initialized successfully with baseline tables and seed data.');
+  } catch (err) {
+    console.error('⚠️  Database auto-initialization notice:', err.message);
+  }
+}
+
+/**
  * Utility function to test database connectivity on server startup.
- * Logs clean, credential-safe status messages.
+ * Logs clean, credential-safe status messages and initializes tables if empty.
  */
 export async function testConnection() {
+  let connection;
   try {
-    const connection = await pool.getConnection();
+    connection = await pool.getConnection();
     const sanitizedHost = poolConfig.host || 'unknown';
     const sanitizedPort = poolConfig.port || 3306;
     const sanitizedDb = poolConfig.database || 'defaultdb';
     
     console.log(`✅ Connected successfully to MySQL database (${sanitizedHost}:${sanitizedPort}/${sanitizedDb}).`);
-    connection.release();
+    
+    // Auto-initialize schema if tables do not exist
+    await autoInitSchemaIfEmpty(connection);
+
     return true;
   } catch (error) {
     console.error('⚠️  Database Connection Notice:');
@@ -113,6 +161,8 @@ export async function testConnection() {
       console.error('   👉 Cloud troubleshooting: Check Aiven host, port, credentials, and SSL settings.');
     }
     return false;
+  } finally {
+    if (connection) connection.release();
   }
 }
 
