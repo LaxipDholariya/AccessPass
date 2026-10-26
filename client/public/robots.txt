@@ -6,6 +6,7 @@ User-agent: *
 Allow: /
 Allow: /register-visit
 Allow: /pass-lookup
+Allow: /staff-register
 Allow: /login
 
 # Disallow private dashboards and security operations
@@ -20,5 +21,4 @@ Disallow: /pass/
 Disallow: /api/
 
 # XML Sitemap Location
-# (Update domain in production: e.g. https://your-production-domain.edu/sitemap.xml)
-Sitemap: https://accesspass.local/sitemap.xml
+Sitemap: https://access-pass-five.vercel.app/sitemap.xml

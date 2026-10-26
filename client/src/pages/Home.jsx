@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, Search } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Search, FileText, CheckCircle2, QrCode, Lock } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
         canonicalPath="/"
       />
 
-      {/* Main Section */}
+      {/* Hero Header Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-200 bg-white">
         <div className="max-w-4xl mx-auto text-center space-y-5">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold uppercase tracking-wider border border-blue-100">
@@ -32,10 +32,14 @@ export default function Home() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Streamlined Campus & Facility Visitor Passes
+            Digital Visitor Access Management System
           </h1>
 
-          <p className="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg font-medium text-slate-700 max-w-2xl mx-auto">
+            Streamlined Campus &amp; Facility Visitor Passes
+          </p>
+
+          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Register your appointment online, obtain designated host authorization, and receive a secure, 
             verifiable digital QR pass for gate check-in and check-out.
           </p>
@@ -94,7 +98,7 @@ export default function Home() {
       <section className="py-12 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-xl font-bold text-slate-900">System Lifecycle & Verification Process</h2>
+            <h2 className="text-xl font-bold text-slate-900">System Lifecycle &amp; Verification Process</h2>
             <p className="text-sm text-slate-500 mt-1">Four structured checkpoints ensuring campus safety</p>
           </div>
 
@@ -140,6 +144,58 @@ export default function Home() {
               </p>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Visitor Access Guidelines & Policy Information (Improves Text-to-Code Ratio with Valuable Content) */}
+      <section className="py-12 px-4 sm:px-6 bg-white border-t border-slate-200">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-bold text-slate-900">Campus Visitor Guidelines &amp; Access Policies</h2>
+            <p className="text-sm text-slate-500 mt-1">Important information for guests, academic visitors, and contractors</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-600">
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="flex items-center space-x-2 text-slate-900 font-semibold text-sm">
+                <FileText className="w-4 h-4 text-blue-600" />
+                <span>Advance Appointment Pre-Registration</span>
+              </div>
+              <p className="leading-relaxed">
+                All campus guests and appointment attendees are required to submit an online registration request in advance. Submitting your intended arrival schedule, destination facility, and visit purpose allows faculty and administrative hosts adequate time to review and approve your access authorization before you travel.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="flex items-center space-x-2 text-slate-900 font-semibold text-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Mandatory Official Identity Verification</span>
+              </div>
+              <p className="leading-relaxed">
+                To guarantee physical perimeter safety, visitors must bring the physical government-issued identity proof (National ID card, passport, or driving license) that matches the credential details entered during registration. Campus security officers verify matching identification records before authorizing physical entry.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="flex items-center space-x-2 text-slate-900 font-semibold text-sm">
+                <QrCode className="w-4 h-4 text-blue-600" />
+                <span>Contactless Digital QR Badge Verification</span>
+              </div>
+              <p className="leading-relaxed">
+                Approved visitors can instantly retrieve their digital access badge using their unique visit reference code and private verification secret. Present your mobile device or printed QR badge directly to gate security scanners for quick, contactless credential validation and entry authorization.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="flex items-center space-x-2 text-slate-900 font-semibold text-sm">
+                <Lock className="w-4 h-4 text-blue-600" />
+                <span>Comprehensive Audit Trail &amp; Campus Safety</span>
+              </div>
+              <p className="leading-relaxed">
+                AccessPass enforces single-entry validation and prevents duplicate badge reuse while inside facilities. Physical entrance and departure timestamps are automatically logged into an immutable security audit trail, ensuring complete regulatory compliance and transparent facility accountability.
+              </p>
+            </div>
           </div>
         </div>
       </section>

@@ -4,13 +4,7 @@ import { useLocation } from 'react-router-dom';
 /**
  * SEOHead Component
  * Dynamically manages document title, meta descriptions, robots directives,
- * Open Graph tags, and canonical URLs for React client-side routing.
- * 
- * Complies with Sitechecker.pro on-page SEO standards:
- * - Unique, descriptive title per page (50-60 chars)
- * - Unique meta description (120-160 chars)
- * - Strict 'noindex, nofollow' for private/visitor pass routes
- * - Canonical link management
+ * Open Graph tags, Twitter card tags, and canonical URLs for React client-side routing.
  */
 export default function SEOHead({
   title,
@@ -24,7 +18,11 @@ export default function SEOHead({
   useEffect(() => {
     // 1. Set Page Title
     const baseTitle = 'AccessPass';
-    document.title = title ? `${title} | ${baseTitle}` : 'AccessPass — Digital Visitor Access Management System';
+    const displayTitle = title 
+      ? `${title} | ${baseTitle}` 
+      : 'Digital Visitor Access Management System | AccessPass';
+    
+    document.title = displayTitle;
 
     // Helper to set or create a <meta> tag
     const setMetaTag = (attrName, attrValue, content) => {
@@ -44,19 +42,29 @@ export default function SEOHead({
       setMetaTag('name', 'twitter:description', description);
     }
 
-    // 3. Set Robots Directive (Privacy & indexing control)
-    // Never index private visitor badges, pass details, or staff dashboards!
+    // 3. Set Robots Directive
     const robotsContent = noIndex ? 'noindex, nofollow' : 'index, follow';
     setMetaTag('name', 'robots', robotsContent);
 
-    // 4. Open Graph & Twitter Titles
-    const displayTitle = title ? `${title} | ${baseTitle}` : 'AccessPass — Digital Visitor Access Management System';
+    // 4. Open Graph & Twitter Card Metadata
+    setMetaTag('property', 'og:site_name', 'AccessPass');
     setMetaTag('property', 'og:title', displayTitle);
     setMetaTag('name', 'twitter:title', displayTitle);
     setMetaTag('property', 'og:type', ogType);
 
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://access-pass-five.vercel.app';
+    const ogImageUrl = `${siteUrl}/og-image.png`;
+
+    setMetaTag('property', 'og:image', ogImageUrl);
+    setMetaTag('property', 'og:image:secure_url', ogImageUrl);
+    setMetaTag('property', 'og:image:type', 'image/png');
+    setMetaTag('property', 'og:image:width', '1200');
+    setMetaTag('property', 'og:image:height', '630');
+    setMetaTag('property', 'og:image:alt', 'AccessPass Digital Visitor Access Management System Banner');
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:image', ogImageUrl);
+
     // 5. Canonical URL
-    const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
     const currentCanonical = canonicalPath 
       ? `${siteUrl}${canonicalPath}` 
       : `${siteUrl}${location.pathname}`;

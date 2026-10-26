@@ -1,9 +1,32 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
+  "cleanUrls": true,
+  "redirects": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.php",
+      "destination": "/",
+      "permanent": true
     }
+  ],
+  "rewrites": [
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/staff-register", "destination": "/index.html" },
+    { "source": "/register-visit", "destination": "/index.html" },
+    { "source": "/pass-lookup", "destination": "/index.html" },
+    { "source": "/status-lookup", "destination": "/index.html" },
+    { "source": "/unauthorized", "destination": "/index.html" },
+    { "source": "/pass", "destination": "/index.html" },
+    { "source": "/pass/:path*", "destination": "/index.html" },
+    { "source": "/host", "destination": "/index.html" },
+    { "source": "/host/:path*", "destination": "/index.html" },
+    { "source": "/security", "destination": "/index.html" },
+    { "source": "/security/:path*", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" }
   ]
 }

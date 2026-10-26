@@ -2,32 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Public Homepage -->
   <url>
-    <loc>https://accesspass.local/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <loc>https://access-pass-five.vercel.app/</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Visitor Self-Registration Portal -->
   <url>
-    <loc>https://accesspass.local/register-visit</loc>
-    <lastmod>2026-10-24</lastmod>
+    <loc>https://access-pass-five.vercel.app/register-visit</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Pass Status Lookup -->
   <url>
-    <loc>https://accesspass.local/pass-lookup</loc>
-    <lastmod>2026-10-24</lastmod>
+    <loc>https://access-pass-five.vercel.app/pass-lookup</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Staff Registration Portal -->
+  <url>
+    <loc>https://access-pass-five.vercel.app/staff-register</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Staff Portal Authentication -->
   <url>
-    <loc>https://accesspass.local/login</loc>
-    <lastmod>2026-10-24</lastmod>
+    <loc>https://access-pass-five.vercel.app/login</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
