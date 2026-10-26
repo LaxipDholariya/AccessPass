@@ -1,0 +1,45 @@
+# =========================================================================
+# Render Blueprint Specification
+# Deploys the AccessPass Node.js + Express backend web service
+# =========================================================================
+services:
+  - type: web
+    name: accesspass-backend
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: HOST
+        value: 0.0.0.0
+      # CORS Origin: Enter your exact deployed Vercel frontend URL (e.g. https://accesspass.vercel.app)
+      - key: CORS_ORIGIN
+        sync: false
+      # Aiven MySQL Database Connection Settings
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      # TLS / SSL Required for Aiven Cloud MySQL
+      - key: DB_SSL
+        value: "true"
+      - key: DB_SSL_REJECT_UNAUTHORIZED
+        value: "false"
+      # JWT Authentication Secrets
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h

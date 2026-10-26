@@ -1,0 +1,24 @@
+# AccessPass Robots Configuration
+# Technical SEO compliance: Allow indexing of public entrance pages only.
+# Strictly disallow internal portals, security terminals, and private visitor passes.
+
+User-agent: *
+Allow: /
+Allow: /register-visit
+Allow: /pass-lookup
+Allow: /login
+
+# Disallow private dashboards and security operations
+Disallow: /host/
+Disallow: /security/
+Disallow: /admin/
+
+# Disallow individual visitor pass reference lookups (Privacy Protection)
+Disallow: /pass/
+
+# Disallow backend API endpoints
+Disallow: /api/
+
+# XML Sitemap Location
+# (Update domain in production: e.g. https://your-production-domain.edu/sitemap.xml)
+Sitemap: https://accesspass.local/sitemap.xml
